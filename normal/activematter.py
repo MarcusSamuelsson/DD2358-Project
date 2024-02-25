@@ -22,7 +22,7 @@ def active_matter(timesteps=200, birds=500):
 	dt           = 0.2      # time step
 	Nt           = timesteps      # number of time steps
 	N            = birds      # number of birds
-	plotRealTime = True
+	plotRealTime = False
 
 	# Initialize
 	np.random.seed(17)      # set the random number generator seed
