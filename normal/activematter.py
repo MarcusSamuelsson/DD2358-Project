@@ -10,6 +10,7 @@ Simulate Viscek model for flocking birds
 
 """
 
+#@profile
 def active_matter(timesteps=200, birds=500):
 	""" Finite Volume simulation """
 	print("Running Normal implementation")

@@ -37,7 +37,7 @@ def calculate_standard_deviation(data):
 
 def performance_test_active_matter(fn):
 	""" Test the performance of the finite volume simulation """
-	itterations = 2
+	itterations = 10
 	num_birds_variation = [100, 200, 300, 400, 500]
 	time_taken = []
 	average_time = []
@@ -59,16 +59,24 @@ def performance_test_active_matter(fn):
 	
 	return average_time, standard_deviation
 
+def run_function(fn):
+	""" Run the function """
+	num_birds_variation = [100, 200, 300, 400, 500]
+	
+	for birds in num_birds_variation:
+ 		fn(birds=birds)
+
 
 if __name__== "__main__":
-	fn = [active_matter_cython, active_matter_normal]
-	fn_name = ["cython", "python"]
+	fn = [active_matter_cython]
+	fn_name = ["cython"]
 
 	
 	for f in fn:
 		name = fn_name.pop(0)
-		average_time, standard_deviation = performance_test_active_matter(f)
-		print_for_excell_to_file(name, average_time, standard_deviation)
+		run_function(f)
+  		#average_time, standard_deviation = performance_test_active_matter(f)
+		#print_for_excell_to_file(name, average_time, standard_deviation)
 		print(f"{name} done")
 	
 	print("All done")

@@ -17,17 +17,9 @@ Simulate Viscek model for flocking birds
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def active_matter(int timesteps=200, int birds=500):
+def active_matter(timesteps=200, birds=500):
 	""" Finite Volume simulation """
-	print("Running Cython implementation")
-
-	# This is the first part of the optimization, 
-	# we declare the types of the variables
-	# Variable declarations
-	cdef double v0, eta, L, R, dt, dist, sx, sy
-	cdef int Nt, N, i, b
-	cdef double [:] x, y, theta, vx, vy, mean_theta
-
+	print("Running Normal implementation")
 
 	# Simulation parameters
 	v0           = 1.0      # velocity
@@ -43,11 +35,11 @@ def active_matter(int timesteps=200, int birds=500):
 	np.random.seed(17)      # set the random number generator seed
 
 	# bird positions
-	x = np.random.rand(N)*L
-	y = np.random.rand(N)*L
+	x = np.random.rand(N,1)*L
+	y = np.random.rand(N,1)*L
 
 	# bird velocities
-	theta = 2 * np.pi * np.random.rand(N)
+	theta = 2 * np.pi * np.random.rand(N,1)
 	vx = v0 * np.cos(theta)
 	vy = v0 * np.sin(theta)
 
@@ -58,46 +50,28 @@ def active_matter(int timesteps=200, int birds=500):
 	# Simulation Main Loop
 	for i in range(Nt):
 
+		# move
+		x += vx*dt
+		y += vy*dt
 		
-		# This is the second part of the optimization,
-		# where we use the cythonized code
-		# Loop over birds
-		for b in range(N):
-			# move
-			x[b] += vx[b]*dt
-			y[b] += vy[b]*dt
-
-			# apply periodic BCs
-			x[b] = x[b] % L
-			y[b] = y[b] % L
+		# apply periodic BCs
+		x = x % L
+		y = y % L
 		
-		# This is the third part of the optimization,
-		# where we use C functions for the trigonometric functions
-		# to reduce the overhead of the Python interpreter
-		# This is the most important part of the optimization
 		# find mean angle of neighbors within R
 		mean_theta = theta
 		for b in range(N):
-			sx = 0.0
-			sy = 0.0
-			for j in range(N):
-				dist = pow(x[j] - x[b], 2) + pow(y[j] - y[b], 2)
-				
-				if dist < R**2:
-					sx += cos(theta[j])
-					sy += sin(theta[j])
-
-			mean_theta[b] = atan2(sy, sx)
+			neighbors = (x-x[b])**2+(y-y[b])**2 < R**2
+			sx = np.sum(np.cos(theta[neighbors]))
+			sy = np.sum(np.sin(theta[neighbors]))
+			mean_theta[b] = np.arctan2(sy, sx)
 			
-		
+		# add random perturbations
+		theta = mean_theta + eta*(np.random.rand(N,1)-0.5)
 		
 		# update velocities
-		for b in range(N):
-			# add random perturbations
-			theta[b] = mean_theta[b] + eta*((rand()/RAND_MAX) - 0.5)
-
-			vx[b] = v0 * cos(theta[b])
-			vy[b] = v0 * sin(theta[b])
+		vx = v0 * np.cos(theta)
+		vy = v0 * np.sin(theta)
 		
 		# plot in real time
 		if plotRealTime:
