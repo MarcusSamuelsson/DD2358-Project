@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import line_profiler
 cimport numpy as np
 cimport cython
 from libc.math cimport atan2, cos, sin, pow
@@ -17,6 +16,7 @@ Simulate Viscek model for flocking birds
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.profile(True)
 def active_matter(int timesteps=200, int birds=500):
 	""" Finite Volume simulation """
 	print("Running Cython implementation")
@@ -110,8 +110,8 @@ def active_matter(int timesteps=200, int birds=500):
 			plt.pause(0.001)
 				
 	# Save figure
-	#plt.savefig('activematter.png',dpi=240)
-	#plt.close()
+	plt.savefig('activematter.png',dpi=240)
+	plt.close()
 	#plt.show()
 	    
 	return 0

@@ -45,7 +45,7 @@ def active_matter(timesteps=200, birds=500):
 	vy = v0 * torch.sin(theta)
 	
 	# Prep figure
-	#fig = plt.figure(figsize=(4,4), dpi=80)
+	fig = plt.figure(figsize=(4,4), dpi=80)
 	ax = plt.gca()
 	
 	# Simulation Main Loop
@@ -92,8 +92,8 @@ def active_matter(timesteps=200, birds=500):
 			plt.pause(0.001)
 				
 	# Save figure
-	#plt.savefig('activematter.png',dpi=240)
-	#plt.close()
+	plt.savefig('activematter.png',dpi=240)
+	plt.close()
 	#plt.show()
 	    
 	return 0
