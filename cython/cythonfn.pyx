@@ -114,5 +114,4 @@ def active_matter(int timesteps=200, int birds=500):
 	plt.close()
 	#plt.show()
 	    
-	return 0
-
+	return np.asarray(x), np.asarray(y), np.asarray(vx), np.asarray(vy), L, v0

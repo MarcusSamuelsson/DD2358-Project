@@ -96,5 +96,5 @@ def active_matter(timesteps=200, birds=500):
 	plt.close()
 	#plt.show()
 	    
-	return 0
+	return x, y, vx, vy, L, v0
 
