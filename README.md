@@ -1,3 +1,9 @@
+# Requirements to run
+This program requires the install of the following:
+```
+    pytorch, cython, numpy and matplotlib
+```
+
 # How to run the program
 Use this command to run the test of the program
 ```
